@@ -1,24 +1,46 @@
+'use client';
+
 import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import clsx from 'clsx';
+import {
+  HomeIcon, // Assuming HomeIcon for "Dashboard"
+  SparklesIcon, // Assuming UserGroupIcon for "Meditations"
+  CogIcon,
+   // Assuming CogIcon for "Settings", this icon needs to be imported accordingly
+} from '@heroicons/react/24/outline';
+
+// Define the links with their corresponding icons
+const links = [
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+  { name: 'Meditations', href: '/dashboard/meditations', icon: SparklesIcon },
+  { name: 'Settings', href: '/dashboard/settings', icon: CogIcon }, // Replace CogIcon with the correct icon for "Settings"
+];
 
 export default function NavLinks() {
-    return (
-        <>
-            <NavLink href="/dashboard" label="Dashboard" />
-            <NavLink href="/dashboard/meditations" label="Meditations" />
-            <NavLink href="/dashboard/settings" label="Settings" />
-        </>
-    );
-}
+  const pathname = usePathname();
 
-interface NavLinkProps {
-    href: string;
-    label: string;
-}
-
-function NavLink({ href, label }: NavLinkProps) {
-    return (
-        <Link href={href}>
-            <p>{label}</p>
-        </Link>
-    );
+  return (
+    <>
+      {links.map((link) => {
+        const LinkIcon = link.icon;
+        return (
+          <Link
+            key={link.name}
+            href={link.href}
+            className={clsx(
+              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
+              {
+                'bg-sky-100 text-blue-600': pathname === link.href,
+              },
+            )}
+          >
+            {/* Render the link as an a tag to allow for default browser handling */}
+              <LinkIcon className="w-6" />
+              <p className="hidden md:block">{link.name}</p>
+          </Link>
+        );
+      })}
+    </>
+  );
 }
